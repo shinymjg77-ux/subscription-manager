@@ -83,7 +83,7 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
           <h2 className="font-semibold text-gray-900 dark:text-white">
             {editingSubscription ? '구독 수정' : '구독 추가'}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-xl">✕</button>
+          <button onClick={onClose} className="p-2 -m-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-xl">✕</button>
         </div>
         <form onSubmit={handleSubmit} className="px-6 py-4 flex flex-col gap-4">
           {/* 서비스 이름 */}
@@ -133,7 +133,7 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
                   key={value}
                   type="button"
                   onClick={() => set('cycle', value as SubscriptionFormData['cycle'])}
-                  className={`flex-1 py-2 text-sm rounded-lg border transition-colors ${
+                  className={`flex-1 py-2.5 text-sm rounded-lg border transition-colors ${
                     form.cycle === value
                       ? 'border-indigo-600 bg-indigo-600 text-white'
                       : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-indigo-400'
@@ -160,13 +160,13 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
           {/* 카테고리 */}
           <div>
             <label className="label">카테고리</label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat.value}
                   type="button"
                   onClick={() => set('category', cat.value as SubscriptionFormData['category'])}
-                  className={`py-2 text-sm rounded-lg border transition-colors ${
+                  className={`py-2.5 text-sm rounded-lg border transition-colors ${
                     form.category === cat.value
                       ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300'
                       : 'border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-gray-300'
@@ -187,7 +187,7 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
                   key={c}
                   type="button"
                   onClick={() => set('color', c)}
-                  className={`w-7 h-7 rounded-full transition-transform ${form.color === c ? 'scale-125 ring-2 ring-offset-2 ring-gray-400' : ''}`}
+                  className={`w-10 h-10 rounded-full transition-transform ${form.color === c ? 'scale-125 ring-2 ring-offset-2 ring-gray-400' : ''}`}
                   style={{ backgroundColor: c }}
                 />
               ))}

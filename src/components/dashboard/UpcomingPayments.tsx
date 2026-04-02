@@ -26,13 +26,17 @@ export function UpcomingPayments({ subscriptions, onEdit }: UpcomingPaymentsProp
               <button
                 key={sub.id}
                 onClick={() => onEdit(sub.id)}
-                className="flex items-center gap-3 text-left hover:bg-gray-50 dark:hover:bg-gray-750 rounded-lg p-2 -m-2 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-left hover:bg-gray-50 dark:hover:bg-gray-750 rounded-lg p-2 -m-2 transition-colors min-h-[44px] justify-center"
               >
-                <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: sub.color }} />
-                <span className="flex-1 text-sm text-gray-800 dark:text-gray-200 truncate">{sub.name}</span>
-                <span className="text-sm text-gray-500 dark:text-gray-400">{formatDate(sub.next_payment_date)}</span>
-                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${daysColor}`}>{daysLabel}</span>
-                <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{formatAmount(sub.amount, sub.currency)}</span>
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: sub.color }} />
+                  <span className="flex-1 text-sm text-gray-800 dark:text-gray-200 truncate">{sub.name}</span>
+                </div>
+                <div className="flex items-center gap-2 pl-5 sm:pl-0">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{formatDate(sub.next_payment_date)}</span>
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${daysColor}`}>{daysLabel}</span>
+                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{formatAmount(sub.amount, sub.currency)}</span>
+                </div>
               </button>
             )
           })}
