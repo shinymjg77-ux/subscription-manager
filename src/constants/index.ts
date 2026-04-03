@@ -34,6 +34,12 @@ export const PAYMENT_METHODS = [
   { value: '기타', label: '기타' },
 ]
 
+export const CARD_ISSUERS = [
+  '현대카드', '삼성카드', '신한카드', 'KB국민카드', '롯데카드',
+  '하나카드', '우리카드', 'NH농협카드', 'BC카드',
+  '카카오뱅크', '토스뱅크', '케이뱅크', '기타',
+]
+
 export const PRESET_COLORS = [
   '#6366f1',
   '#ef4444',

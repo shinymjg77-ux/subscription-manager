@@ -71,7 +71,7 @@ function App() {
       <div className={activeTab === 'cards' ? 'block' : 'hidden'}>
         <CardsPage
           cards={cards}
-          onAdd={(nickname, lastDigits) => addCard({ nickname, last_digits: lastDigits || undefined })}
+          onAdd={({ issuer, nickname, lastDigits }) => addCard({ issuer, nickname: nickname || undefined, last_digits: lastDigits || undefined })}
           onRemove={removeCard}
         />
       </div>

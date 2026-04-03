@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '../ui/Button'
 import { CATEGORIES, PRESET_COLORS, CYCLE_LABELS, PAYMENT_METHODS } from '../../constants'
 import { nextMonthISO, nextOccurrenceOfDay } from '../../utils/date'
+import { cardLabel } from '../../pages/CardsPage'
 import type { Subscription, SubscriptionFormData, UserCard } from '../../types'
 
 interface SubscriptionModalProps {
@@ -41,7 +42,7 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
         setForm(rest)
         const day = new Date(editingSubscription.next_payment_date + 'T00:00:00').getDate()
         setBillingDay(day)
-        const cardLabels = cards.map((c) => c.last_digits ? `${c.nickname} (${c.last_digits}*)` : c.nickname)
+        const cardLabels = cards.map((c) => cardLabel(c))
         setManualCard(!!editingSubscription.card_name && !cardLabels.includes(editingSubscription.card_name))
       } else {
         const today = new Date().getDate()
@@ -209,7 +210,7 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
                 >
                   <option value="">선택 안함</option>
                   {cards.map((c) => {
-                    const label = c.last_digits ? `${c.nickname} (${c.last_digits}*)` : c.nickname
+                    const label = cardLabel(c)
                     return <option key={c.id} value={label}>{label}</option>
                   })}
                   <option value="__manual__">직접 입력</option>

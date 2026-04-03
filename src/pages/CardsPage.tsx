@@ -1,30 +1,32 @@
 import { useState } from 'react'
 import { Button } from '../components/ui/Button'
+import { CARD_ISSUERS } from '../constants'
 import type { UserCard } from '../types'
 
 interface CardsPageProps {
   cards: UserCard[]
-  onAdd: (nickname: string, lastDigits: string) => Promise<void>
+  onAdd: (data: { issuer: string; nickname: string; lastDigits: string }) => Promise<void>
   onRemove: (id: string) => Promise<void>
 }
 
+export function cardLabel(card: UserCard) {
+  const base = [card.issuer, card.nickname].filter(Boolean).join(' ')
+  return card.last_digits ? `${base} (${card.last_digits}*)` : base
+}
+
 export function CardsPage({ cards, onAdd, onRemove }: CardsPageProps) {
+  const [issuer, setIssuer] = useState(CARD_ISSUERS[0])
   const [nickname, setNickname] = useState('')
   const [lastDigits, setLastDigits] = useState('')
   const [loading, setLoading] = useState(false)
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault()
-    if (!nickname.trim()) return
     setLoading(true)
-    await onAdd(nickname.trim(), lastDigits.trim())
+    await onAdd({ issuer, nickname: nickname.trim(), lastDigits: lastDigits.trim() })
     setNickname('')
     setLastDigits('')
     setLoading(false)
-  }
-
-  function cardLabel(card: UserCard) {
-    return card.last_digits ? `${card.nickname} (${card.last_digits}*)` : card.nickname
   }
 
   return (
@@ -37,13 +39,19 @@ export function CardsPage({ cards, onAdd, onRemove }: CardsPageProps) {
       <form onSubmit={handleAdd} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 flex flex-col gap-3">
         <p className="text-sm font-medium text-gray-700 dark:text-gray-300">새 카드 등록</p>
         <div className="flex gap-2">
+          <select
+            value={issuer}
+            onChange={(e) => setIssuer(e.target.value)}
+            className="input w-36"
+          >
+            {CARD_ISSUERS.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
           <input
             type="text"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             className="input flex-1"
-            placeholder="카드 이름 (예: 샵페이, 현대카드)"
-            required
+            placeholder="카드 이름 (선택, 예: 샵페이)"
           />
           <input
             type="text"
@@ -55,7 +63,7 @@ export function CardsPage({ cards, onAdd, onRemove }: CardsPageProps) {
             inputMode="numeric"
           />
         </div>
-        <Button type="submit" disabled={loading || !nickname.trim()} className="self-end">
+        <Button type="submit" disabled={loading} className="self-end">
           {loading ? '추가 중...' : '추가'}
         </Button>
       </form>

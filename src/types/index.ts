@@ -20,12 +20,13 @@ export type SubscriptionFormData = Omit<Subscription, 'id' | 'user_id' | 'create
 export interface UserCard {
   id: string
   user_id: string
-  nickname: string
+  issuer: string
+  nickname?: string
   last_digits?: string
   created_at: string
 }
 
-export type UserCardFormData = Pick<UserCard, 'nickname' | 'last_digits'>
+export type UserCardFormData = Pick<UserCard, 'issuer' | 'nickname' | 'last_digits'>
 
 export interface CategorySummary {
   category: string
