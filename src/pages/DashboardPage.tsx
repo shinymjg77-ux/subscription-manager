@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { SummaryCards } from '../components/dashboard/SummaryCards'
 import { CategoryPieChart } from '../components/dashboard/CategoryPieChart'
 import { UpcomingPayments } from '../components/dashboard/UpcomingPayments'
+import { CardSummary } from '../components/dashboard/CardSummary'
 import { getMonthlyKRW } from '../utils/currency'
 import { CATEGORY_CONFIG } from '../constants'
 import type { Subscription, DashboardStats } from '../types'
@@ -40,6 +41,7 @@ export function DashboardPage({ subscriptions, onEdit }: DashboardPageProps) {
   return (
     <div className="flex flex-col gap-4 pt-4">
       <SummaryCards stats={stats} />
+      <CardSummary subscriptions={subscriptions} />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <CategoryPieChart data={stats.byCategory} />
         <UpcomingPayments subscriptions={subscriptions} onEdit={onEdit} />
