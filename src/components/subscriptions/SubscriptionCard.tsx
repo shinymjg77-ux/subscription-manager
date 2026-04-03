@@ -30,7 +30,7 @@ export function SubscriptionCard({ sub, onEdit, onToggle }: SubscriptionCardProp
           {sub.payment_method && (
             <span>{sub.payment_method}{sub.card_name ? ` · ${sub.card_name}` : ''}</span>
           )}
-          <span className={daysColor}>{formatDate(sub.next_payment_date)} ({daysLabel})</span>
+          <span className={daysColor}>{formatDate(sub.next_payment_date)}</span>
         </div>
       </div>
       <div className="text-right flex-shrink-0">
