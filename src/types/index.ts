@@ -11,6 +11,7 @@ export interface Subscription {
   active: boolean
   notes?: string
   payment_method?: string
+  card_name?: string
   created_at: string
 }
 

@@ -30,3 +30,11 @@ export function nextMonthISO(): string {
   d.setMonth(d.getMonth() + 1)
   return format(d, 'yyyy-MM-dd')
 }
+
+export function nextOccurrenceOfDay(day: number): string {
+  const now = new Date()
+  const candidate = new Date(now.getFullYear(), now.getMonth(), day)
+  if (candidate > now) return format(candidate, 'yyyy-MM-dd')
+  const next = new Date(now.getFullYear(), now.getMonth() + 1, day)
+  return format(next, 'yyyy-MM-dd')
+}

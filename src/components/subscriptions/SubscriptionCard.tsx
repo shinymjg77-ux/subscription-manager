@@ -27,7 +27,9 @@ export function SubscriptionCard({ sub, onEdit, onToggle }: SubscriptionCardProp
         </div>
         <div className="flex items-center gap-3 mt-1 text-sm text-gray-500 dark:text-gray-400">
           <span>{CYCLE_LABELS[sub.cycle]}</span>
-          {sub.payment_method && <span>{sub.payment_method}</span>}
+          {sub.payment_method && (
+            <span>{sub.payment_method}{sub.card_name ? ` · ${sub.card_name}` : ''}</span>
+          )}
           <span className={daysColor}>{formatDate(sub.next_payment_date)} ({daysLabel})</span>
         </div>
       </div>

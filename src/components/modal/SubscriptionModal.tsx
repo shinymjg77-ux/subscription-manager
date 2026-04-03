@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Button } from '../ui/Button'
 import { CATEGORIES, PRESET_COLORS, CYCLE_LABELS, PAYMENT_METHODS } from '../../constants'
-import { nextMonthISO } from '../../utils/date'
+import { nextMonthISO, nextOccurrenceOfDay } from '../../utils/date'
 import type { Subscription, SubscriptionFormData } from '../../types'
 
 interface SubscriptionModalProps {
@@ -26,6 +26,7 @@ const EMPTY: SubscriptionFormData = {
 
 export function SubscriptionModal({ open, editingSubscription, onClose, onSave, onDelete }: SubscriptionModalProps) {
   const [form, setForm] = useState<SubscriptionFormData>(EMPTY)
+  const [billingDay, setBillingDay] = useState(new Date().getDate())
   const [loading, setLoading] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [error, setError] = useState('')
@@ -36,8 +37,12 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
         const { id, user_id, created_at, ...rest } = editingSubscription
         void id; void user_id; void created_at
         setForm(rest)
+        const day = new Date(editingSubscription.next_payment_date + 'T00:00:00').getDate()
+        setBillingDay(day)
       } else {
-        setForm({ ...EMPTY, next_payment_date: nextMonthISO() })
+        const today = new Date().getDate()
+        setBillingDay(today)
+        setForm({ ...EMPTY, next_payment_date: nextOccurrenceOfDay(today) })
       }
       setConfirmDelete(false)
       setError('')
@@ -50,6 +55,17 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
 
   function set<K extends keyof SubscriptionFormData>(key: K, value: SubscriptionFormData[K]) {
     setForm((f) => ({ ...f, [key]: value }))
+  }
+
+  function handleBillingDayChange(day: number) {
+    const clamped = Math.min(31, Math.max(1, day))
+    setBillingDay(clamped)
+    set('next_payment_date', nextOccurrenceOfDay(clamped))
+  }
+
+  function handlePaymentMethodChange(value: string) {
+    set('payment_method', value || undefined)
+    if (value !== '신용카드') set('card_name', undefined)
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -155,7 +171,7 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
             <label className="label">결제수단 (선택)</label>
             <select
               value={form.payment_method ?? ''}
-              onChange={(e) => set('payment_method', e.target.value || undefined)}
+              onChange={(e) => handlePaymentMethodChange(e.target.value)}
               className="input"
             >
               <option value="">선택 안함</option>
@@ -165,16 +181,39 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
             </select>
           </div>
 
+          {/* 카드사 (신용카드 선택 시) */}
+          {form.payment_method === '신용카드' && (
+            <div>
+              <label className="label">카드사</label>
+              <select
+                value={form.card_name ?? ''}
+                onChange={(e) => set('card_name', e.target.value || undefined)}
+                className="input"
+              >
+                <option value="">선택 안함</option>
+                {['현대카드', '삼성카드', '신한카드', 'KB국민카드', '롯데카드', '하나카드', '우리카드', 'NH농협카드', 'BC카드', '기타'].map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {/* 다음 결제일 */}
           <div>
             <label className="label">정기결제일</label>
-            <input
-              type="date"
-              value={form.next_payment_date}
-              onChange={(e) => set('next_payment_date', e.target.value)}
-              className="input"
-              required
-            />
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                inputMode="numeric"
+                value={billingDay}
+                onChange={(e) => handleBillingDayChange(Number(e.target.value))}
+                className="input w-24 text-center"
+                min="1"
+                max="31"
+                required
+              />
+              <span className="text-sm text-gray-500 dark:text-gray-400">일 (매달)</span>
+            </div>
           </div>
 
           {/* 카테고리 */}
