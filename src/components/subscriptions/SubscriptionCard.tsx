@@ -14,7 +14,6 @@ export function SubscriptionCard({ sub, onEdit, onToggle }: SubscriptionCardProp
   const days = getDaysUntil(sub.next_payment_date)
   const monthlyKRW = getMonthlyKRW(sub)
 
-  const daysLabel = days === 0 ? '오늘' : days === 1 ? '내일' : `${days}일 후`
   const daysColor = days <= 3 ? 'text-red-500' : days <= 7 ? 'text-amber-500' : 'text-gray-400'
 
   return (
