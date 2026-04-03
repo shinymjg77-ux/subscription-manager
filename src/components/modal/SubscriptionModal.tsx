@@ -41,7 +41,11 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
       }
       setConfirmDelete(false)
       setError('')
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
     }
+    return () => { document.body.style.overflow = '' }
   }, [open, editingSubscription])
 
   function set<K extends keyof SubscriptionFormData>(key: K, value: SubscriptionFormData[K]) {
@@ -78,7 +82,7 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 px-4" onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
-      <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-md max-h-[85svh] overflow-y-auto overscroll-contain shadow-2xl">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="font-semibold text-gray-900 dark:text-white">
             {editingSubscription ? '구독 수정' : '구독 추가'}
@@ -105,6 +109,7 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
               <label className="label">금액</label>
               <input
                 type="number"
+                inputMode="numeric"
                 value={form.amount || ''}
                 onChange={(e) => set('amount', Number(e.target.value))}
                 className="input"
