@@ -25,7 +25,7 @@ export function SubscriptionCard({ sub, onEdit, onToggle }: SubscriptionCardProp
           <span className="font-medium text-gray-900 dark:text-white truncate">{sub.name}</span>
           <Badge category={sub.category} />
         </div>
-        <div className="flex items-center gap-3 mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-x-3 gap-y-0.5 mt-1 text-sm text-gray-500 dark:text-gray-400 flex-wrap">
           <span>{CYCLE_LABELS[sub.cycle]}</span>
           {sub.payment_method && (
             <span>{sub.payment_method}{sub.card_name ? ` · ${sub.card_name}` : ''}</span>
