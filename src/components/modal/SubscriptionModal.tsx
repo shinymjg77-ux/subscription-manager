@@ -202,16 +202,15 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
           <div>
             <label className="label">정기결제일</label>
             <div className="flex items-center gap-2">
-              <input
-                type="number"
-                inputMode="numeric"
+              <select
                 value={billingDay}
                 onChange={(e) => handleBillingDayChange(Number(e.target.value))}
-                className="input w-24 text-center"
-                min="1"
-                max="31"
-                required
-              />
+                className="input w-24"
+              >
+                {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
               <span className="text-sm text-gray-500 dark:text-gray-400">일 (매달)</span>
             </div>
           </div>
