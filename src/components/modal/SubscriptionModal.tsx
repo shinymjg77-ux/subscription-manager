@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Button } from '../ui/Button'
-import { CATEGORIES, PRESET_COLORS, CYCLE_LABELS } from '../../constants'
+import { CATEGORIES, PRESET_COLORS, CYCLE_LABELS, PAYMENT_METHODS } from '../../constants'
 import { nextMonthISO } from '../../utils/date'
 import type { Subscription, SubscriptionFormData } from '../../types'
 
@@ -150,9 +150,24 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
             </div>
           </div>
 
+          {/* 결제수단 */}
+          <div>
+            <label className="label">결제수단 (선택)</label>
+            <select
+              value={form.payment_method ?? ''}
+              onChange={(e) => set('payment_method', e.target.value || undefined)}
+              className="input"
+            >
+              <option value="">선택 안함</option>
+              {PAYMENT_METHODS.map((m) => (
+                <option key={m.value} value={m.value}>{m.label}</option>
+              ))}
+            </select>
+          </div>
+
           {/* 다음 결제일 */}
           <div>
-            <label className="label">다음 결제일</label>
+            <label className="label">정기결제일</label>
             <input
               type="date"
               value={form.next_payment_date}

@@ -24,6 +24,16 @@ export const CYCLE_LABELS: Record<string, string> = {
   weekly: '주간',
 }
 
+export const PAYMENT_METHODS = [
+  { value: '신용카드', label: '신용카드' },
+  { value: '체크카드', label: '체크카드' },
+  { value: '카카오페이', label: '카카오페이' },
+  { value: '네이버페이', label: '네이버페이' },
+  { value: '토스', label: '토스' },
+  { value: '페이팔', label: '페이팔' },
+  { value: '기타', label: '기타' },
+]
+
 export const PRESET_COLORS = [
   '#6366f1',
   '#ef4444',

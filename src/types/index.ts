@@ -10,6 +10,7 @@ export interface Subscription {
   color: string
   active: boolean
   notes?: string
+  payment_method?: string
   created_at: string
 }
 
