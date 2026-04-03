@@ -1,4 +1,4 @@
-type Tab = 'dashboard' | 'subscriptions'
+export type Tab = 'dashboard' | 'subscriptions' | 'cards'
 
 interface TabNavProps {
   active: Tab
@@ -8,6 +8,7 @@ interface TabNavProps {
 const tabs = [
   { id: 'dashboard' as Tab, label: '대시보드' },
   { id: 'subscriptions' as Tab, label: '구독 목록' },
+  { id: 'cards' as Tab, label: '카드' },
 ]
 
 export function TabNav({ active, onChange }: TabNavProps) {

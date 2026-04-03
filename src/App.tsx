@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react'
 import './index.css'
 import { useAuth } from './hooks/useAuth'
 import { useSubscriptions } from './hooks/useSubscriptions'
+import { useCards } from './hooks/useCards'
 import { AuthPage } from './pages/AuthPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { SubscriptionsPage } from './pages/SubscriptionsPage'
+import { CardsPage } from './pages/CardsPage'
 import { AppShell } from './components/layout/AppShell'
 import { TabNav } from './components/layout/TabNav'
+import type { Tab } from './components/layout/TabNav'
 import { SubscriptionModal } from './components/modal/SubscriptionModal'
-
-type Tab = 'dashboard' | 'subscriptions'
 
 function App() {
   const { session, loading: authLoading, signIn, signUp, signOut } = useAuth()
@@ -18,6 +19,7 @@ function App() {
     add, update, remove, toggleActive,
     isModalOpen, editingId, openModal, closeModal,
   } = useSubscriptions(session)
+  const { cards, add: addCard, remove: removeCard } = useCards(session)
 
   const [activeTab, setActiveTab] = useState<Tab>('dashboard')
   const [darkMode, setDarkMode] = useState(() => {
@@ -66,11 +68,19 @@ function App() {
           onAdd={() => openModal()}
         />
       </div>
+      <div className={activeTab === 'cards' ? 'block' : 'hidden'}>
+        <CardsPage
+          cards={cards}
+          onAdd={(nickname, lastDigits) => addCard({ nickname, last_digits: lastDigits || undefined })}
+          onRemove={removeCard}
+        />
+      </div>
 
       <SubscriptionModal
         open={isModalOpen}
         editingSubscription={editingSub}
         onClose={closeModal}
+        cards={cards}
         onSave={async (data) => {
           if (editingId) await update(editingId, data)
           else await add(data)

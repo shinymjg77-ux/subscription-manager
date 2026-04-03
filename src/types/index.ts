@@ -17,6 +17,16 @@ export interface Subscription {
 
 export type SubscriptionFormData = Omit<Subscription, 'id' | 'user_id' | 'created_at'>
 
+export interface UserCard {
+  id: string
+  user_id: string
+  nickname: string
+  last_digits?: string
+  created_at: string
+}
+
+export type UserCardFormData = Pick<UserCard, 'nickname' | 'last_digits'>
+
 export interface CategorySummary {
   category: string
   total: number

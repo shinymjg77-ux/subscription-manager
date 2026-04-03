@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '../ui/Button'
 import { CATEGORIES, PRESET_COLORS, CYCLE_LABELS, PAYMENT_METHODS } from '../../constants'
 import { nextMonthISO, nextOccurrenceOfDay } from '../../utils/date'
-import type { Subscription, SubscriptionFormData } from '../../types'
+import type { Subscription, SubscriptionFormData, UserCard } from '../../types'
 
 interface SubscriptionModalProps {
   open: boolean
@@ -10,6 +10,7 @@ interface SubscriptionModalProps {
   onClose: () => void
   onSave: (data: SubscriptionFormData) => Promise<void>
   onDelete?: (id: string) => Promise<void>
+  cards?: UserCard[]
 }
 
 const EMPTY: SubscriptionFormData = {
@@ -24,12 +25,13 @@ const EMPTY: SubscriptionFormData = {
   notes: '',
 }
 
-export function SubscriptionModal({ open, editingSubscription, onClose, onSave, onDelete }: SubscriptionModalProps) {
+export function SubscriptionModal({ open, editingSubscription, onClose, onSave, onDelete, cards = [] }: SubscriptionModalProps) {
   const [form, setForm] = useState<SubscriptionFormData>(EMPTY)
   const [billingDay, setBillingDay] = useState(new Date().getDate())
   const [loading, setLoading] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [error, setError] = useState('')
+  const [manualCard, setManualCard] = useState(false)
 
   useEffect(() => {
     if (open) {
@@ -39,10 +41,13 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
         setForm(rest)
         const day = new Date(editingSubscription.next_payment_date + 'T00:00:00').getDate()
         setBillingDay(day)
+        const cardLabels = cards.map((c) => c.last_digits ? `${c.nickname} (${c.last_digits}*)` : c.nickname)
+        setManualCard(!!editingSubscription.card_name && !cardLabels.includes(editingSubscription.card_name))
       } else {
         const today = new Date().getDate()
         setBillingDay(today)
         setForm({ ...EMPTY, next_payment_date: nextOccurrenceOfDay(today) })
+        setManualCard(false)
       }
       setConfirmDelete(false)
       setError('')
@@ -189,16 +194,46 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
               <label className="label">
                 {['카카오페이', '네이버페이'].includes(form.payment_method ?? '') ? '연결 카드' : '카드사'}
               </label>
-              <select
-                value={form.card_name ?? ''}
-                onChange={(e) => set('card_name', e.target.value || undefined)}
-                className="input"
-              >
-                <option value="">선택 안함</option>
-                {['현대카드', '삼성카드', '신한카드', 'KB국민카드', '롯데카드', '하나카드', '우리카드', 'NH농협카드', 'BC카드', '기타'].map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
+              {cards.length > 0 && !manualCard ? (
+                <select
+                  value={form.card_name ?? ''}
+                  onChange={(e) => {
+                    if (e.target.value === '__manual__') {
+                      setManualCard(true)
+                      set('card_name', undefined)
+                    } else {
+                      set('card_name', e.target.value || undefined)
+                    }
+                  }}
+                  className="input"
+                >
+                  <option value="">선택 안함</option>
+                  {cards.map((c) => {
+                    const label = c.last_digits ? `${c.nickname} (${c.last_digits}*)` : c.nickname
+                    return <option key={c.id} value={label}>{label}</option>
+                  })}
+                  <option value="__manual__">직접 입력</option>
+                </select>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={form.card_name ?? ''}
+                    onChange={(e) => set('card_name', e.target.value || undefined)}
+                    className="input"
+                    placeholder="카드 이름 직접 입력"
+                  />
+                  {cards.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => { setManualCard(false); set('card_name', undefined) }}
+                      className="text-xs text-indigo-500 hover:text-indigo-700 flex-shrink-0"
+                    >
+                      목록에서 선택
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
