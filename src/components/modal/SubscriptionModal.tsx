@@ -63,9 +63,11 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
     set('next_payment_date', nextOccurrenceOfDay(clamped))
   }
 
+  const CARD_METHODS = ['신용카드', '체크카드', '카카오페이', '네이버페이']
+
   function handlePaymentMethodChange(value: string) {
     set('payment_method', value || undefined)
-    if (value !== '신용카드') set('card_name', undefined)
+    if (!CARD_METHODS.includes(value)) set('card_name', undefined)
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -181,10 +183,12 @@ export function SubscriptionModal({ open, editingSubscription, onClose, onSave, 
             </select>
           </div>
 
-          {/* 카드사 (신용카드 선택 시) */}
-          {form.payment_method === '신용카드' && (
+          {/* 카드사 */}
+          {CARD_METHODS.includes(form.payment_method ?? '') && (
             <div>
-              <label className="label">카드사</label>
+              <label className="label">
+                {['카카오페이', '네이버페이'].includes(form.payment_method ?? '') ? '연결 카드' : '카드사'}
+              </label>
               <select
                 value={form.card_name ?? ''}
                 onChange={(e) => set('card_name', e.target.value || undefined)}
