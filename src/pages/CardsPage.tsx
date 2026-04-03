@@ -11,7 +11,9 @@ interface CardsPageProps {
 
 export function cardLabel(card: UserCard) {
   const base = [card.issuer, card.nickname].filter(Boolean).join(' ')
-  return card.last_digits ? `${base} (${card.last_digits}*)` : base
+  if (!card.last_digits) return base
+  const masked = card.last_digits.slice(0, -1) + '*'
+  return `${base} (${masked})`
 }
 
 export function CardsPage({ cards, onAdd, onRemove }: CardsPageProps) {
