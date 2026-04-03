@@ -13,19 +13,14 @@ export function CardSummary({ subscriptions }: CardSummaryProps) {
     const map = new Map<string, { label: string; count: number; total: number }>()
 
     for (const s of active) {
+      if (!s.card_name) continue
       const key = s.card_name
-        ? `${s.payment_method ?? ''}__${s.card_name}`
-        : s.payment_method ?? '미지정'
-      const label = s.card_name
-        ? `${s.payment_method ? `${s.payment_method} · ` : ''}${s.card_name}`
-        : s.payment_method ?? '결제수단 미지정'
-
       const existing = map.get(key)
       if (existing) {
         existing.count++
         existing.total += getMonthlyKRW(s)
       } else {
-        map.set(key, { label, count: 1, total: getMonthlyKRW(s) })
+        map.set(key, { label: s.card_name, count: 1, total: getMonthlyKRW(s) })
       }
     }
 
@@ -36,7 +31,7 @@ export function CardSummary({ subscriptions }: CardSummaryProps) {
 
   return (
     <Card className="p-4">
-      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">결제수단별 월간 지출</h3>
+      <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">카드별 월간 지출</h3>
       <div className="flex flex-col gap-2">
         {groups.map((g) => (
           <div key={g.label} className="flex items-center justify-between">
